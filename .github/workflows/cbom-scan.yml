@@ -1,0 +1,23 @@
+on:
+  workflow_dispatch:
+
+jobs:
+  cbom-scan:
+    runs-on: ubuntu-20.04
+    name: CBOM generation
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Create CBOM
+        uses: PQCA/CBOMkit-action@v1.1.1-alpha
+        id: cbom
+      - name: Commit changes to new branch
+        uses: actions/upload-artifact@v4
+        with: 
+          name: "CBOM"
+          path: ${{ steps.cbom.outputs.pattern }}
+          if-no-files-found: warn 
+
